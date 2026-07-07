@@ -87,7 +87,7 @@ const anthropic = apiKey ? new Anthropic({ apiKey }) : null;
 // Google Gemini — a genuinely free API (free tier, no credit card). Preferred
 // when GEMINI_API_KEY is set. Called over REST so it adds no dependency.
 const geminiKey = process.env.GEMINI_API_KEY;
-const geminiModel = process.env.GEMINI_MODEL ?? "gemini-2.0-flash";
+const geminiModel = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
 
 export const isAiEnabled = Boolean(apiKey || geminiKey);
 
