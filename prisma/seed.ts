@@ -110,6 +110,8 @@ async function main() {
         prepTime: r.prepTime,
         cookTime: r.cookTime,
         servings: r.servings,
+        ingredients: r.ingredients,
+        steps: r.steps,
         published: true,
       },
     });

@@ -2,17 +2,19 @@
 
 import { useState, useMemo } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { Search, Clock, Users, Play } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, Clock, Users, ChefHat, X, Flame } from "lucide-react";
 import { SectionHeading } from "./section-heading";
 import { RecipeAssistant } from "./recipe-assistant";
 import { Reveal } from "@/components/motion/reveal";
 import { staggerContainer, fadeInUp } from "@/animations/variants";
 import { recipes } from "@/data/products";
+import type { Recipe } from "@/types";
 
 export function Recipes() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
+  const [selected, setSelected] = useState<Recipe | null>(null);
 
   const categories = useMemo(
     () => ["All", ...Array.from(new Set(recipes.map((r) => r.category)))],
@@ -89,7 +91,14 @@ export function Recipes() {
               key={recipe.id}
               variants={fadeInUp}
               whileHover={{ y: -8 }}
-              className="group overflow-hidden rounded-4xl border border-white/10 bg-surface/50 backdrop-blur-xl"
+              onClick={() => setSelected(recipe)}
+              onKeyDown={(e) =>
+                (e.key === "Enter" || e.key === " ") && setSelected(recipe)
+              }
+              role="button"
+              tabIndex={0}
+              aria-label={`View recipe: ${recipe.title}`}
+              className="group cursor-pointer overflow-hidden rounded-4xl border border-white/10 bg-surface/50 backdrop-blur-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary"
             >
               <div className="relative h-44 overflow-hidden bg-gradient-to-br from-brand-primary/30 to-background">
                 <Image
@@ -104,9 +113,9 @@ export function Recipes() {
                   {recipe.category}
                 </span>
                 <div className="absolute inset-0 grid place-items-center opacity-0 transition-opacity group-hover:opacity-100">
-                  <div className="grid h-14 w-14 place-items-center rounded-full bg-brand-gradient shadow-glow">
-                    <Play className="h-6 w-6 fill-white text-white" />
-                  </div>
+                  <span className="flex items-center gap-2 rounded-full bg-brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-glow">
+                    <ChefHat className="h-4 w-4" /> View recipe
+                  </span>
                 </div>
               </div>
               <div className="p-5">
@@ -137,6 +146,146 @@ export function Recipes() {
           </p>
         )}
       </div>
+
+      <RecipeModal recipe={selected} onClose={() => setSelected(null)} />
     </section>
+  );
+}
+
+function RecipeModal({
+  recipe,
+  onClose,
+}: {
+  recipe: Recipe | null;
+  onClose: () => void;
+}) {
+  return (
+    <AnimatePresence>
+      {recipe && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm"
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 30, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.98 }}
+            transition={{ type: "spring", damping: 28, stiffness: 300 }}
+            role="dialog"
+            aria-modal="true"
+            aria-label={recipe.title}
+            className="fixed inset-0 z-[81] m-auto h-fit max-h-[88vh] w-[92%] max-w-2xl overflow-y-auto rounded-4xl border border-white/10 bg-surface/95 backdrop-blur-2xl"
+          >
+            {/* Header image */}
+            <div className="relative h-48 overflow-hidden rounded-t-4xl bg-gradient-to-br from-brand-primary/40 to-background sm:h-56">
+              <Image
+                src={recipe.image}
+                alt={recipe.title}
+                fill
+                sizes="640px"
+                className="object-cover opacity-90"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent" />
+              <button
+                onClick={onClose}
+                aria-label="Close recipe"
+                className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-black/50 text-white backdrop-blur transition-colors hover:bg-black/70"
+              >
+                <X className="h-5 w-5" />
+              </button>
+              <div className="absolute bottom-4 left-6 right-6">
+                <span className="rounded-full bg-brand-gradient px-3 py-1 text-xs font-semibold text-white">
+                  {recipe.category}
+                </span>
+                <h3 className="mt-2 font-heading text-2xl font-extrabold text-white sm:text-3xl">
+                  {recipe.title}
+                </h3>
+              </div>
+            </div>
+
+            <div className="p-6 sm:p-8">
+              <p className="text-muted">{recipe.excerpt}</p>
+
+              {/* Meta */}
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Meta icon={Clock} label="Prep" value={`${recipe.prepTime} min`} />
+                <Meta icon={Flame} label="Cook" value={`${recipe.cookTime} min`} />
+                <Meta icon={Users} label="Serves" value={`${recipe.servings}`} />
+              </div>
+
+              <div className="mt-8 grid gap-8 sm:grid-cols-[0.9fr_1.4fr]">
+                {/* Ingredients */}
+                <div>
+                  <h4 className="mb-3 font-heading text-sm font-bold uppercase tracking-widest text-brand-secondary">
+                    Ingredients
+                  </h4>
+                  <ul className="space-y-2">
+                    {recipe.ingredients.map((ing) => (
+                      <li
+                        key={ing}
+                        className="flex items-start gap-2 text-sm text-white/90"
+                      >
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-secondary" />
+                        {ing}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Steps */}
+                <div>
+                  <h4 className="mb-3 font-heading text-sm font-bold uppercase tracking-widest text-brand-accent">
+                    Steps
+                  </h4>
+                  <ol className="space-y-4">
+                    {recipe.steps.map((step, i) => (
+                      <li key={i} className="flex gap-3">
+                        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-gradient font-heading text-sm font-bold text-white">
+                          {i + 1}
+                        </span>
+                        <p className="pt-0.5 text-sm leading-relaxed text-white/90">
+                          {step}
+                        </p>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
+
+              <div className="mt-8 flex items-start gap-2 rounded-2xl border border-brand-primary/30 bg-brand-primary/10 p-4 text-sm text-white/90">
+                <Flame className="mt-0.5 h-4 w-4 shrink-0 text-brand-secondary" />
+                <span>
+                  Made with <strong>Kulas Chili Garlic Sauce</strong> — adjust the
+                  amount to your preferred heat, and add an extra spoon at the
+                  table for more fire.
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function Meta({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof Clock;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2">
+      <Icon className="h-4 w-4 text-brand-secondary" />
+      <span className="text-xs text-muted">{label}</span>
+      <span className="text-sm font-semibold text-white">{value}</span>
+    </div>
   );
 }

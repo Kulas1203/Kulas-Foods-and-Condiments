@@ -172,6 +172,22 @@ export const recipes: Recipe[] = [
     prepTime: 5,
     cookTime: 10,
     servings: 2,
+    ingredients: [
+      "3 cups day-old cooked rice",
+      "2 tbsp Kulas Chili Garlic Sauce",
+      "3 cloves garlic, minced",
+      "2 tbsp cooking oil",
+      "1 egg, beaten (optional)",
+      "Salt and pepper to taste",
+      "Spring onions, to garnish",
+    ],
+    steps: [
+      "Heat the oil in a wide pan over medium-high heat and fry the minced garlic until golden and fragrant.",
+      "Add the day-old rice and break up any clumps, tossing to coat in the garlic oil.",
+      "Push the rice aside, pour in the beaten egg, scramble lightly, then fold it through the rice.",
+      "Stir in 2 tbsp of Kulas Chili Garlic Sauce and toss until every grain is glossy and evenly coated.",
+      "Season with salt and pepper, garnish with spring onions, and serve hot with an extra spoon of Kulas on the side.",
+    ],
   },
   {
     id: "rc2",
@@ -183,6 +199,21 @@ export const recipes: Recipe[] = [
     prepTime: 5,
     cookTime: 12,
     servings: 2,
+    ingredients: [
+      "200g egg noodles or spaghetti",
+      "3 tbsp Kulas Chili Garlic Sauce",
+      "2 tbsp soy sauce",
+      "1 tbsp oyster sauce",
+      "1 tsp sugar",
+      "2 tbsp reserved noodle water",
+      "Toasted sesame seeds and spring onions",
+    ],
+    steps: [
+      "Cook the noodles in salted water until just tender, then drain, reserving 2 tbsp of the noodle water.",
+      "In a bowl, whisk together the Kulas sauce, soy sauce, oyster sauce, sugar, and reserved noodle water.",
+      "Return the hot noodles to the pan, pour over the sauce, and toss over low heat until glossy and coated.",
+      "Plate up and finish with toasted sesame seeds and spring onions. Add more Kulas for extra heat.",
+    ],
   },
   {
     id: "rc3",
@@ -194,6 +225,22 @@ export const recipes: Recipe[] = [
     prepTime: 20,
     cookTime: 25,
     servings: 4,
+    ingredients: [
+      "1 kg chicken thighs and legs",
+      "3 tbsp Kulas Chili Garlic Sauce",
+      "3 tbsp calamansi or lemon juice",
+      "3 tbsp soy sauce",
+      "4 cloves garlic, crushed",
+      "1 tbsp brown sugar",
+      "2 tbsp annatto (achuete) oil for basting",
+    ],
+    steps: [
+      "Marinate the chicken in calamansi juice, soy sauce, garlic, and 2 tbsp Kulas for at least 30 minutes.",
+      "Mix the remaining 1 tbsp Kulas with the brown sugar and annatto oil to make the basting glaze.",
+      "Grill the chicken over medium coals, turning every few minutes, basting generously with the Kulas glaze.",
+      "Cook until the juices run clear and the skin is caramelized and lightly charred, about 20–25 minutes.",
+      "Rest for 5 minutes and serve with garlic rice and a Kulas–calamansi dipping sauce.",
+    ],
   },
   {
     id: "rc4",
@@ -205,6 +252,19 @@ export const recipes: Recipe[] = [
     prepTime: 2,
     cookTime: 5,
     servings: 1,
+    ingredients: [
+      "2 eggs",
+      "1 tbsp Kulas Chili Garlic Sauce",
+      "2 tbsp cooking oil",
+      "Pinch of salt",
+      "Hot steamed rice, to serve",
+    ],
+    steps: [
+      "Heat the oil in a small pan over medium-high until shimmering.",
+      "Crack in the eggs and fry until the edges are crispy and lacy but the yolk stays runny.",
+      "Slide the eggs over hot rice, sprinkle with a pinch of salt.",
+      "Finish with a spoonful of Kulas Chili Garlic Sauce over the top and serve immediately.",
+    ],
   },
 ];
 

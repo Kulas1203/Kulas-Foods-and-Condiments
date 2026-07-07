@@ -66,6 +66,8 @@ export interface Recipe {
   prepTime: number;
   cookTime: number;
   servings: number;
+  ingredients: string[];
+  steps: string[];
 }
 
 export interface FaqItem {
