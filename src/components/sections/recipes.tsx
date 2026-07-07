@@ -5,6 +5,8 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Search, Clock, Users, Play } from "lucide-react";
 import { SectionHeading } from "./section-heading";
+import { RecipeAssistant } from "./recipe-assistant";
+import { Reveal } from "@/components/motion/reveal";
 import { staggerContainer, fadeInUp } from "@/animations/variants";
 import { recipes } from "@/data/products";
 
@@ -41,6 +43,11 @@ export function Recipes() {
           }
           description="A spoonful of Kulas is all it takes. Explore dishes the whole family will love."
         />
+
+        {/* AI Chef assistant */}
+        <Reveal className="mx-auto mt-12 max-w-3xl">
+          <RecipeAssistant />
+        </Reveal>
 
         {/* Search + categories */}
         <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">

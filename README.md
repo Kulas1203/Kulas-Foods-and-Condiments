@@ -31,7 +31,11 @@ The flagship product is the **Kulas Chili Garlic Sauce**, featured throughout th
 - Revenue / orders / customers / inventory KPIs, sales-overview area chart (Recharts), top products, recent orders, low-stock alerts, and admin notifications.
 - Products, orders, customers, coupons, reviews, recipes, and settings sections.
 - **Drag-and-drop Media Library** — drag/drop, click, or paste images; live grid with copy-URL and delete; uploads to **Cloudinary** when configured, otherwise to local disk. Admin-guarded, Zod/size/type validated.
+- **Live Sales dashboard (real-time)** — a Server-Sent Events feed pushes new orders and inventory changes to the admin dashboard the instant they happen, with a session revenue/order counter and connection indicator. Checkout publishes to an in-process event bus; the dashboard subscribes via `EventSource`. (SSE is the App-Router-native equivalent of a WebSocket push and works with `node server.js` / Docker.)
 - Role-based access (`STAFF` / `ADMIN` / `SUPER_ADMIN`) enforced by middleware + NextAuth.
+
+### AI Recipe Assistant
+- A **"Kulas AI Chef"** widget in the Recipes section takes the cook's on-hand ingredients, spice preference, and meal type and returns 2–3 dishes built around the sauce. Powered by **Claude (`claude-opus-4-8`)** via a forced-tool structured-output call when `ANTHROPIC_API_KEY` is set; falls back to a deterministic recommender over the recipe catalog with zero config.
 
 ---
 
@@ -164,6 +168,8 @@ For production PWA install icons you may also add `public/icon-192.png` and `pub
 | `POST` | `/api/coupons/validate` | Validate a coupon against a subtotal |
 | `GET/POST` | `/api/media` | List / upload media (admin, multipart) |
 | `DELETE` | `/api/media/[id]` | Delete a media asset (admin) |
+| `GET/POST` | `/api/admin/live` | SSE live sales/inventory stream; POST emits a test event (admin) |
+| `POST` | `/api/recipes/recommend` | AI (or local-fallback) recipe recommendations |
 | `POST` | `/api/contact` | Store + email a contact message |
 | `POST` | `/api/newsletter` | Newsletter subscribe |
 | `POST` | `/api/auth/register` | Customer registration |
@@ -200,7 +206,7 @@ Fonts: **Poppins** (headings), **Inter** (body), **Montserrat** (buttons).
 ---
 
 ## 📌 Notes & Roadmap
-The **drag-and-drop media library** is now fully implemented (Cloudinary + local-disk fallback, admin-guarded API at `/api/media`). A couple of advanced items remain architected/stubbed for incremental extension: the live WebSocket sales feed and AI recipe recommendations. The data models, services, and UI hooks are in place to implement them.
+The **drag-and-drop media library**, the **real-time live-sales dashboard** (SSE-based), and **AI recipe recommendations** (Claude with local fallback) are all fully implemented. The build ships production-ready with graceful degradation when optional services (Stripe, Resend, Cloudinary, Anthropic) are not configured.
 
 ---
 

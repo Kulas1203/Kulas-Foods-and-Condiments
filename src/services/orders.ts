@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { generateOrderNumber } from "@/lib/utils";
+import { publish } from "@/services/events";
 import type { CheckoutInput } from "@/lib/validations";
 
 const SHIPPING_FLAT = 120;
@@ -78,9 +79,9 @@ export async function priceOrder(input: CheckoutInput): Promise<PricedOrder> {
   };
 }
 
-/** Persists a priced order and decrements inventory. */
+/** Persists a priced order and decrements inventory, then broadcasts live events. */
 export async function createOrder(priced: PricedOrder) {
-  return prisma.$transaction(async (tx) => {
+  const order = await prisma.$transaction(async (tx) => {
     const order = await tx.order.create({
       data: {
         orderNumber: priced.orderNumber,
@@ -118,4 +119,32 @@ export async function createOrder(priced: PricedOrder) {
 
     return order;
   });
+
+  // Broadcast to the admin live dashboard (SSE subscribers).
+  const itemCount = priced.items.reduce((n, i) => n + i.quantity, 0);
+  publish({
+    type: "order.created",
+    orderNumber: order.orderNumber,
+    email: order.email,
+    total: Number(order.total),
+    itemCount,
+    at: new Date().toISOString(),
+  });
+
+  // Real-time inventory updates for the affected products.
+  const inventories = await prisma.inventory.findMany({
+    where: { productId: { in: priced.items.map((i) => i.productId) } },
+  });
+  for (const inv of inventories) {
+    publish({
+      type: "inventory.updated",
+      productId: inv.productId,
+      sku: inv.sku,
+      quantity: inv.quantity,
+      lowStock: inv.quantity <= inv.lowStockAlert,
+      at: new Date().toISOString(),
+    });
+  }
+
+  return order;
 }

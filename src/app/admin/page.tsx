@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { AdminTopbar } from "@/components/admin/topbar";
 import { SalesChart } from "@/components/admin/sales-chart";
+import { LiveSalesFeed } from "@/components/admin/live-sales-feed";
 import { getDashboardStats } from "@/services/dashboard";
 import { formatPrice } from "@/lib/utils";
 
@@ -89,25 +90,30 @@ export default async function AdminDashboard() {
             <SalesChart data={stats.salesSeries} />
           </div>
 
-          {/* Top products */}
-          <div className="rounded-4xl border border-white/10 bg-surface/50 p-6 backdrop-blur-xl">
-            <h2 className="mb-4 font-heading text-lg font-bold">Top Products</h2>
-            <div className="space-y-4">
-              {stats.topProducts.map((p, i) => (
-                <div key={p.name} className="flex items-center gap-3">
-                  <span className="grid h-8 w-8 place-items-center rounded-full bg-white/5 font-heading text-sm font-bold text-brand-accent">
-                    {i + 1}
-                  </span>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{p.name}</p>
-                    <p className="text-xs text-muted">{p.sold} sold</p>
-                  </div>
-                  <span className="text-sm font-semibold">
-                    {formatPrice(p.revenue)}
-                  </span>
+          {/* Real-time sales feed (SSE) */}
+          <LiveSalesFeed />
+        </div>
+
+        {/* Top products */}
+        <div className="rounded-4xl border border-white/10 bg-surface/50 p-6 backdrop-blur-xl">
+          <h2 className="mb-4 font-heading text-lg font-bold">Top Products</h2>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {stats.topProducts.map((p, i) => (
+              <div
+                key={p.name}
+                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-3"
+              >
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/5 font-heading text-sm font-bold text-brand-accent">
+                  {i + 1}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium">{p.name}</p>
+                  <p className="text-xs text-muted">
+                    {p.sold} sold · {formatPrice(p.revenue)}
+                  </p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
 
