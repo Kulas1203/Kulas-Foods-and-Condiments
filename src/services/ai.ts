@@ -84,31 +84,106 @@ const RECIPE_TOOL = {
 const apiKey = process.env.ANTHROPIC_API_KEY;
 const anthropic = apiKey ? new Anthropic({ apiKey }) : null;
 
-export const isAiEnabled = Boolean(apiKey);
+// Google Gemini — a genuinely free API (free tier, no credit card). Preferred
+// when GEMINI_API_KEY is set. Called over REST so it adds no dependency.
+const geminiKey = process.env.GEMINI_API_KEY;
+const geminiModel = process.env.GEMINI_MODEL ?? "gemini-2.0-flash";
+
+export const isAiEnabled = Boolean(apiKey || geminiKey);
 
 const SYSTEM_PROMPT = `You are the head chef for Kulas Foods and Condiments, a premium Filipino artisan brand. Your flagship product is Kulas Chili Garlic Sauce — a small-batch, smoky, garlicky chili sauce (heat level 4/5) made from fresh labuyo chili, toasted garlic, oil, sea salt, and cane vinegar.
 
 Given a home cook's available ingredients, preferred spice level, and meal type, recommend 2-3 delicious dishes that feature Kulas Chili Garlic Sauce. Keep dishes achievable in a home kitchen, warm and Filipino in spirit, and always describe specifically how the Kulas sauce is used. Scale spice suggestions to the requested level. Be concise and appetizing. Return your answer only through the suggest_recipes tool.`;
 
+function buildUserPrompt(input: RecommendInput): string {
+  return [
+    `Ingredients on hand: ${input.ingredients?.trim() || "anything common in a Filipino pantry"}`,
+    `Preferred spice level: ${input.spiceLevel}/5`,
+    `Meal type: ${input.mealType}`,
+    input.notes ? `Extra notes: ${input.notes}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+/** Free-tier Google Gemini call with structured JSON output (REST, no SDK). */
+async function callGemini(
+  input: RecommendInput,
+): Promise<RecipeRecommendation | null> {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiKey}`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+      contents: [{ role: "user", parts: [{ text: buildUserPrompt(input) }] }],
+      generationConfig: {
+        temperature: 0.85,
+        maxOutputTokens: 1024,
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: "OBJECT",
+          properties: {
+            intro: { type: "STRING" },
+            recommendations: {
+              type: "ARRAY",
+              items: {
+                type: "OBJECT",
+                properties: {
+                  title: { type: "STRING" },
+                  description: { type: "STRING" },
+                  usesKulas: { type: "STRING" },
+                  difficulty: { type: "STRING", enum: ["Easy", "Medium", "Hard"] },
+                  timeMinutes: { type: "INTEGER" },
+                  ingredients: { type: "ARRAY", items: { type: "STRING" } },
+                },
+                required: [
+                  "title",
+                  "description",
+                  "usesKulas",
+                  "difficulty",
+                  "timeMinutes",
+                  "ingredients",
+                ],
+              },
+            },
+          },
+          required: ["intro", "recommendations"],
+        },
+      },
+    }),
+  });
+
+  if (!res.ok) throw new Error(`Gemini ${res.status}: ${await res.text()}`);
+  const json = (await res.json()) as {
+    candidates?: { content?: { parts?: { text?: string }[] } }[];
+  };
+  const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!text) return null;
+  return recommendationSchema.parse(JSON.parse(text));
+}
+
 export async function recommendRecipes(
   input: RecommendInput,
 ): Promise<RecipeRecommendation & { source: "ai" | "local" }> {
+  // Prefer the free Gemini provider when configured.
+  if (geminiKey) {
+    try {
+      const parsed = await callGemini(input);
+      if (parsed) return { ...parsed, source: "ai" };
+    } catch (err) {
+      console.error("[AI_RECOMMEND_GEMINI]", err);
+      // fall through to Claude / local
+    }
+  }
+
   if (anthropic) {
     try {
-      const userPrompt = [
-        `Ingredients on hand: ${input.ingredients?.trim() || "anything common in a Filipino pantry"}`,
-        `Preferred spice level: ${input.spiceLevel}/5`,
-        `Meal type: ${input.mealType}`,
-        input.notes ? `Extra notes: ${input.notes}` : "",
-      ]
-        .filter(Boolean)
-        .join("\n");
-
       const message = await anthropic.messages.create({
         model: "claude-opus-4-8",
         max_tokens: 2048,
         system: SYSTEM_PROMPT,
-        messages: [{ role: "user", content: userPrompt }],
+        messages: [{ role: "user", content: buildUserPrompt(input) }],
         tools: [RECIPE_TOOL],
         tool_choice: { type: "tool", name: RECIPE_TOOL.name },
       });

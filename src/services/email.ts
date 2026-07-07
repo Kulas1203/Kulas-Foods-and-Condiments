@@ -9,7 +9,10 @@ import { siteConfig } from "@/data/site";
 
 const apiKey = process.env.RESEND_API_KEY;
 const resend = apiKey ? new Resend(apiKey) : null;
-const from = process.env.EMAIL_FROM ?? "Kulas Foods <hello@kulasfoods.com>";
+// Default to Resend's shared onboarding sender, which works on the free tier
+// with no domain verification. Set EMAIL_FROM once you've verified your own
+// domain (e.g. "Kulas Foods <hello@yourdomain.com>").
+const from = process.env.EMAIL_FROM ?? "Kulas Foods <onboarding@resend.dev>";
 
 export async function sendContactNotification(data: ContactInput) {
   if (!resend) return;
@@ -17,7 +20,8 @@ export async function sendContactNotification(data: ContactInput) {
     .send({
       from,
       to: siteConfig.email,
-      subject: `New message: ${data.subject ?? "Contact form"}`,
+      replyTo: data.email,
+      subject: `New message from ${data.name}: ${data.subject ?? "Contact form"}`,
       text: `From: ${data.name} <${data.email}>\n\n${data.body}`,
     })
     .catch((e) => console.error("[EMAIL]", e));

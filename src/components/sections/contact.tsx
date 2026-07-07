@@ -69,20 +69,20 @@ export function Contact() {
               </div>
             ))}
 
-            {/* Map placeholder */}
+            {/* Google Map — Sherwood, Butuan City (keyless embed) */}
             <div className="relative h-56 overflow-hidden rounded-3xl border border-white/10 bg-surface/50">
-              <div className="absolute inset-0 grid place-items-center">
-                <div className="text-center">
-                  <MapPin className="mx-auto h-8 w-8 text-brand-secondary" />
-                  <p className="mt-2 text-sm text-muted">
-                    {siteConfig.address}
-                  </p>
-                  <p className="text-xs text-muted/60">
-                    Google Map embed placeholder
-                  </p>
-                </div>
+              <iframe
+                title="Kulas Foods location — Sherwood, Butuan City"
+                src="https://www.google.com/maps?q=Sherwood%2C%20Butuan%20City%2C%20Agusan%20del%20Norte%2C%20Philippines&z=15&output=embed"
+                className="h-full w-full border-0 grayscale-[0.2] contrast-[1.05]"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
+              <div className="pointer-events-none absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-background/80 px-3 py-1 text-xs font-medium text-white backdrop-blur">
+                <MapPin className="h-3.5 w-3.5 text-brand-secondary" />
+                Sherwood, Butuan City
               </div>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,90,54,0.12),transparent_60%)]" />
             </div>
 
             <div className="flex gap-3">
