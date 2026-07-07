@@ -5,6 +5,10 @@ const nextConfig = {
   output: "standalone",
   images: {
     formats: ["image/avif", "image/webp"],
+    // Admin-only uploads may include SVGs; sandbox them via CSP.
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "utfs.io" },

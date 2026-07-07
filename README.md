@@ -29,7 +29,8 @@ The flagship product is the **Kulas Chili Garlic Sauce**, featured throughout th
 
 ### Admin Dashboard (custom CMS — no WordPress)
 - Revenue / orders / customers / inventory KPIs, sales-overview area chart (Recharts), top products, recent orders, low-stock alerts, and admin notifications.
-- Products, orders, customers, coupons, reviews, recipes, media, and settings sections.
+- Products, orders, customers, coupons, reviews, recipes, and settings sections.
+- **Drag-and-drop Media Library** — drag/drop, click, or paste images; live grid with copy-URL and delete; uploads to **Cloudinary** when configured, otherwise to local disk. Admin-guarded, Zod/size/type validated.
 - Role-based access (`STAFF` / `ADMIN` / `SUPER_ADMIN`) enforced by middleware + NextAuth.
 
 ---
@@ -161,6 +162,8 @@ For production PWA install icons you may also add `public/icon-192.png` and `pub
 | `GET/POST` | `/api/reviews` | List approved / submit review |
 | `POST` | `/api/checkout` | Price cart, create order, Stripe session |
 | `POST` | `/api/coupons/validate` | Validate a coupon against a subtotal |
+| `GET/POST` | `/api/media` | List / upload media (admin, multipart) |
+| `DELETE` | `/api/media/[id]` | Delete a media asset (admin) |
 | `POST` | `/api/contact` | Store + email a contact message |
 | `POST` | `/api/newsletter` | Newsletter subscribe |
 | `POST` | `/api/auth/register` | Customer registration |
@@ -197,7 +200,7 @@ Fonts: **Poppins** (headings), **Inter** (body), **Montserrat** (buttons).
 ---
 
 ## 📌 Notes & Roadmap
-Some advanced items from the brief are architected/stubbed for incremental extension rather than fully wired: live WebSocket sales feed, drag-and-drop media uploads, and AI recipe recommendations. The data models, services, and UI hooks are in place to implement them.
+The **drag-and-drop media library** is now fully implemented (Cloudinary + local-disk fallback, admin-guarded API at `/api/media`). A couple of advanced items remain architected/stubbed for incremental extension: the live WebSocket sales feed and AI recipe recommendations. The data models, services, and UI hooks are in place to implement them.
 
 ---
 
