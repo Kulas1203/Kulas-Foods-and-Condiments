@@ -146,11 +146,23 @@ docker compose up --build
 ## 🖼️ Using the real product photo
 
 The site ships with a branded **SVG placeholder** of the jar at
-`public/products/kulas-chili-garlic-sauce.svg`. To use the real photograph:
+`public/products/kulas-chili-garlic-sauce.svg`. To use the real photograph,
+one command does the wiring:
 
-1. Drop the uploaded jar image into `public/products/` (e.g. `kulas-chili-garlic-sauce.jpg`).
-2. Update the `heroImage` / `gallery` / `ogImage` paths in
-   `src/data/products.ts` and `src/data/site.ts` (or edit the product in the admin dashboard once seeded).
+```bash
+# put the photo at public/products/kulas-chili-garlic-sauce.jpg, then:
+npm run use-photo
+#   …or point it at a file anywhere:
+npm run use-photo -- ./path/to/photo.jpg
+#   revert to the SVG placeholder any time:
+npm run use-photo -- --revert
+```
+
+This repoints every `heroImage` / `gallery` / `ogImage` reference in
+`src/data/products.ts` and `src/data/site.ts` from the SVG to the JPEG (the
+SVG stays as a fallback asset). If you'd rather do it by hand, just swap the
+`.svg` extension for `.jpg` in those two files, or edit the product in the
+admin dashboard once seeded.
 
 For production PWA install icons you may also add `public/icon-192.png` and `public/icon-512.png`
 (the app currently uses the scalable `src/app/icon.svg` everywhere).

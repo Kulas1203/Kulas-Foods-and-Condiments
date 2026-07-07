@@ -15,6 +15,7 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
+    "use-photo": "node scripts/use-real-photo.mjs",
     "postinstall": "prisma generate"
   },
   "prisma": {
