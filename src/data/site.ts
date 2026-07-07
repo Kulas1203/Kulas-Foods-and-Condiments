@@ -6,7 +6,7 @@ export const siteConfig = {
   description:
     "Premium handcrafted chili garlic sauce made from fresh ingredients for every Filipino kitchen. Crafted with fire, made with flavor.",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
-  ogImage: "/products/kulas-chili-garlic-sauce.svg",
+  ogImage: "/products/kulas-chili-garlic-sauce.jpg",
   tagline: "Crafted with Fire. Made with Flavor.",
   email: "hello@kulasfoods.com",
   phone: "+63 900 000 0000",
