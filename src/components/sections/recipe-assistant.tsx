@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, ChefHat, Clock, Loader2, Flame, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { HeatMeter } from "./heat-meter";
 import { cn } from "@/lib/utils";
 
 interface Recommendation {
