@@ -33,6 +33,7 @@ const recommendationSchema = z.object({
         difficulty: z.enum(["Easy", "Medium", "Hard"]),
         timeMinutes: z.number().int(),
         ingredients: z.array(z.string()),
+        steps: z.array(z.string()),
       }),
     )
     .min(1)
@@ -65,6 +66,11 @@ const RECIPE_TOOL = {
             difficulty: { type: "string", enum: ["Easy", "Medium", "Hard"] },
             timeMinutes: { type: "integer" },
             ingredients: { type: "array", items: { type: "string" } },
+            steps: {
+              type: "array",
+              items: { type: "string" },
+              description: "Ordered step-by-step cooking instructions (3-6 steps).",
+            },
           },
           required: [
             "title",
@@ -73,6 +79,7 @@ const RECIPE_TOOL = {
             "difficulty",
             "timeMinutes",
             "ingredients",
+            "steps",
           ],
         },
       },
@@ -93,7 +100,7 @@ export const isAiEnabled = Boolean(apiKey || geminiKey);
 
 const SYSTEM_PROMPT = `You are the head chef for Kulas Foods and Condiments, a premium Filipino artisan brand. Your flagship product is Kulas Chili Garlic Sauce — a small-batch, smoky, garlicky chili sauce (heat level 4/5) made from fresh labuyo chili, toasted garlic, oil, sea salt, and cane vinegar.
 
-Given a home cook's available ingredients, preferred spice level, and meal type, recommend 2-3 delicious dishes that feature Kulas Chili Garlic Sauce. Keep dishes achievable in a home kitchen, warm and Filipino in spirit, and always describe specifically how the Kulas sauce is used. Scale spice suggestions to the requested level. Be concise and appetizing. Return your answer only through the suggest_recipes tool.`;
+Given a home cook's available ingredients, preferred spice level, and meal type, recommend 2-3 delicious dishes that feature Kulas Chili Garlic Sauce. For each dish include a full ingredient list AND clear ordered cooking steps (3-6 concise steps a home cook can follow), and always describe specifically how the Kulas sauce is used. Keep dishes achievable, warm, and Filipino in spirit. Scale spice suggestions to the requested level. Be appetizing. Return your answer only through the suggest_recipes tool.`;
 
 function buildUserPrompt(input: RecommendInput): string {
   return [
@@ -119,7 +126,10 @@ async function callGemini(
       contents: [{ role: "user", parts: [{ text: buildUserPrompt(input) }] }],
       generationConfig: {
         temperature: 0.85,
-        maxOutputTokens: 1024,
+        maxOutputTokens: 4096,
+        // gemini-2.5-flash emits internal "thinking" tokens that count against the
+        // output budget; disable them so the full JSON payload isn't truncated.
+        thinkingConfig: { thinkingBudget: 0 },
         responseMimeType: "application/json",
         responseSchema: {
           type: "OBJECT",
@@ -136,6 +146,7 @@ async function callGemini(
                   difficulty: { type: "STRING", enum: ["Easy", "Medium", "Hard"] },
                   timeMinutes: { type: "INTEGER" },
                   ingredients: { type: "ARRAY", items: { type: "STRING" } },
+                  steps: { type: "ARRAY", items: { type: "STRING" } },
                 },
                 required: [
                   "title",
@@ -144,6 +155,7 @@ async function callGemini(
                   "difficulty",
                   "timeMinutes",
                   "ingredients",
+                  "steps",
                 ],
               },
             },
@@ -244,10 +256,8 @@ function localRecommend(input: RecommendInput): RecipeRecommendation {
             ? "Medium"
             : "Hard",
       timeMinutes: r.prepTime + r.cookTime,
-      ingredients: [
-        ...(wanted.size ? Array.from(wanted) : ["your pantry staples"]),
-        "Kulas Chili Garlic Sauce",
-      ],
+      ingredients: r.ingredients,
+      steps: r.steps,
     })),
   };
 }
