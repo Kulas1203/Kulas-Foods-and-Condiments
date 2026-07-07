@@ -8,13 +8,11 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   ogImage: "/products/kulas-chili-garlic-sauce.jpg",
   tagline: "Crafted with Fire. Made with Flavor.",
-  email: "hello@kulasfoods.com",
-  phone: "+63 900 000 0000",
-  address: "Iloilo City, Philippines",
+  email: "rysarsuelo2@gmail.com",
+  phone: "0992 890 9806 / 0995 109 4135",
+  address: "Butuan City, Philippines",
   socials: {
-    facebook: "https://facebook.com/kulasfoods",
-    instagram: "https://instagram.com/kulasfoods",
-    tiktok: "https://tiktok.com/@kulasfoods",
+    facebook: "https://www.facebook.com/KulasChiliGarlicSauce",
   },
 } as const;
 

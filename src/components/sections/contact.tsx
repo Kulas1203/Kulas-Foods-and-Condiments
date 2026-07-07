@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, MapPin, Phone, Send, Check, Facebook, Instagram } from "lucide-react";
+import { Mail, MapPin, Phone, Send, Check, Facebook } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/motion/reveal";
 import { SectionHeading } from "./section-heading";
@@ -88,7 +88,6 @@ export function Contact() {
             <div className="flex gap-3">
               {[
                 { icon: Facebook, href: siteConfig.socials.facebook },
-                { icon: Instagram, href: siteConfig.socials.instagram },
               ].map(({ icon: Icon, href }, i) => (
                 <a
                   key={i}

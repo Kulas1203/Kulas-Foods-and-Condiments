@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Flame, Facebook, Instagram, Send, Check } from "lucide-react";
+import { Flame, Facebook, Send, Check } from "lucide-react";
 import { siteConfig, footerLinks } from "@/data/site";
 import { Button } from "@/components/ui/button";
 
@@ -107,7 +107,6 @@ export function Footer() {
           <div className="flex items-center gap-3">
             {[
               { icon: Facebook, href: siteConfig.socials.facebook },
-              { icon: Instagram, href: siteConfig.socials.instagram },
             ].map(({ icon: Icon, href }, i) => (
               <a
                 key={i}
