@@ -4,6 +4,7 @@ import { Suspense, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
   Environment,
+  Lightformer,
   Float,
   ContactShadows,
   PresentationControls,
@@ -130,7 +131,32 @@ export function ProductJarScene() {
           far={4}
           color="#000000"
         />
-        <Environment preset="sunset" />
+        {/* Procedural studio environment — no network fetch, so it can't
+            fail offline or in sandboxed runtimes. Warm rim + soft key light
+            give the glass its reflections. */}
+        <Environment resolution={256}>
+          <Lightformer
+            form="rect"
+            intensity={3}
+            color="#ff8a5c"
+            position={[3, 4, 3]}
+            scale={[6, 6, 1]}
+          />
+          <Lightformer
+            form="rect"
+            intensity={2}
+            color="#f4b400"
+            position={[-4, 2, -2]}
+            scale={[5, 5, 1]}
+          />
+          <Lightformer
+            form="ring"
+            intensity={1.5}
+            color="#ffffff"
+            position={[0, -3, 2]}
+            scale={[3, 3, 1]}
+          />
+        </Environment>
       </Suspense>
     </Canvas>
   );

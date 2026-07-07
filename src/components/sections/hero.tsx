@@ -9,6 +9,7 @@ import { ArrowRight, Sparkles, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FloatingParticles } from "@/components/effects/floating-particles";
+import { ThreeErrorBoundary } from "@/components/three/three-error-boundary";
 import { getFeaturedProduct } from "@/data/products";
 
 const ProductJarScene = dynamic(
@@ -144,7 +145,9 @@ export function Hero() {
           style={{ scale: jarScale }}
           className="relative h-[420px] w-full sm:h-[560px] lg:h-[640px]"
         >
-          <ProductJarScene />
+          <ThreeErrorBoundary fallback={<JarFallback />}>
+            <ProductJarScene />
+          </ThreeErrorBoundary>
         </motion.div>
       </div>
 
