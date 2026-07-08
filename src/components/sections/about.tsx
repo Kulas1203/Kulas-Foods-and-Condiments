@@ -21,7 +21,7 @@ const pillars = [
   {
     icon: Heart,
     title: "Our Story",
-    body: "A family recipe from Iloilo that grew from Sunday lunches into a brand — without ever losing its soul.",
+    body: "A family recipe from Butuan City that grew from Sunday lunches into a brand — without ever losing its soul.",
   },
 ];
 

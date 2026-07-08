@@ -15,9 +15,8 @@ export const products: Product[] = [
     description:
       "A slow-cooked chili garlic sauce built on fresh Filipino labuyo, toasted garlic, and premium oil. Every jar is small-batch crafted for deep, layered heat that finishes clean — the kind you'll spoon onto everything.",
     story:
-      "Born in a home kitchen in Iloilo, Kulas started as a family recipe shared over Sunday lunches. Demand from friends turned a stovetop batch into a brand — but the recipe never changed.",
-    price: 189,
-    compareAtPrice: 229,
+      "Born in a home kitchen in Butuan City in 2022, Kulas started as a family recipe shared over Sunday lunches. Demand from friends turned a stovetop batch into a brand — but the recipe never changed.",
+    price: 95,
     currency: "PHP",
     heatLevel: 4,
     netWeight: "220g",
@@ -146,7 +145,7 @@ export const reviews: Review[] = [
     title: "Bold and fresh",
     body: "Genuinely spicy but you still taste the garlic and vinegar. Great with inasal. Wish the jar was bigger!",
     verified: true,
-    location: "Iloilo City",
+    location: "Cagayan de Oro",
     date: "2026-03-22",
   },
   {
@@ -336,12 +335,13 @@ export const whyChooseUs = [
 
 export const timeline = [
   {
-    year: "2021",
+    year: "2022",
     title: "A Family Recipe",
-    description: "Kulas begins on a home stovetop in Iloilo, shared at Sunday lunches.",
+    description:
+      "Kulas begins on a home stovetop in Butuan City, shared at Sunday lunches.",
   },
   {
-    year: "2022",
+    year: "2023",
     title: "Word Spreads",
     description: "Friends and neighbors ask for jars. The first small batches are sold.",
   },
