@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { CheckCircle2, Copy } from "lucide-react";
+import Image from "next/image";
+import { CheckCircle2, Copy, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { paymentMethods, siteConfig, type PaymentMethodKey } from "@/data/site";
 import { formatPrice } from "@/lib/utils";
@@ -43,6 +44,22 @@ export default async function SuccessPage({
               Complete your payment — {method.label}
             </h2>
             <p className="mt-1 text-sm text-muted">{method.note}</p>
+
+            {method.qrImage && (
+              <div className="mt-5 flex flex-col items-center gap-2 rounded-3xl border border-white/10 bg-white p-4">
+                <Image
+                  src={method.qrImage}
+                  alt={`${method.label} payment QR code`}
+                  width={240}
+                  height={240}
+                  className="h-60 w-60 object-contain"
+                />
+                <p className="flex items-center gap-1.5 text-xs font-semibold text-black/70">
+                  <QrCode className="h-3.5 w-3.5" /> Scan with the{" "}
+                  {method.label} app
+                </p>
+              </div>
+            )}
 
             <dl className="mt-5 space-y-3">
               <PayRow label="Account name" value={method.accountName} />

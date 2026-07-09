@@ -21,26 +21,41 @@ export const siteConfig = {
  * accounts and use their order number as the payment reference.
  * ⚠️ Confirm/update these details before taking real orders.
  */
-export const paymentMethods = {
+export type PaymentMethod = {
+  label: string;
+  accountName: string;
+  /** Empty string = not configured yet (checkout says details follow by email). */
+  accountNumber: string;
+  note: string;
+  /** Path under /public to the official app-exported QR (e.g. "/payments/gcash-qr.jpg"). */
+  qrImage: string;
+};
+
+export const paymentMethods: Record<"GCASH" | "MAYA" | "CHINABANK", PaymentMethod> = {
   GCASH: {
     label: "GCash",
     accountName: "Ralph Ryan Sarsuelo",
-    accountNumber: "0992 890 9806",
-    note: "Send via the GCash app — Express Send.",
+    accountNumber: "0995 109 4135",
+    note: "Send via the GCash app — Express Send or scan the QR.",
+    // Export from GCash app: Profile → My QR → Save, then place the image
+    // at public/payments/gcash-qr.jpg and set the path here.
+    qrImage: "",
   },
   MAYA: {
     label: "Maya",
     accountName: "Ralph Ryan Sarsuelo",
-    accountNumber: "0992 890 9806",
-    note: "Send via the Maya app.",
+    accountNumber: "0995 109 4135",
+    note: "Send via the Maya app or scan the QR.",
+    qrImage: "",
   },
   CHINABANK: {
     label: "China Bank",
     accountName: "Ralph Ryan Sarsuelo",
-    accountNumber: "", // ← add your China Bank account number
+    accountNumber: "6291 0214 5769",
     note: "Bank transfer via China Bank app, InstaPay, or over the counter.",
+    qrImage: "",
   },
-} as const;
+};
 
 export type PaymentMethodKey = keyof typeof paymentMethods;
 
