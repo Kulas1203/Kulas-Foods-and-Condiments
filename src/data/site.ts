@@ -16,6 +16,34 @@ export const siteConfig = {
   },
 } as const;
 
+/**
+ * Payment channels shown at checkout. Customers pay directly to these
+ * accounts and use their order number as the payment reference.
+ * ⚠️ Confirm/update these details before taking real orders.
+ */
+export const paymentMethods = {
+  GCASH: {
+    label: "GCash",
+    accountName: "Ralph Ryan Sarsuelo",
+    accountNumber: "0992 890 9806",
+    note: "Send via the GCash app — Express Send.",
+  },
+  MAYA: {
+    label: "Maya",
+    accountName: "Ralph Ryan Sarsuelo",
+    accountNumber: "0992 890 9806",
+    note: "Send via the Maya app.",
+  },
+  CHINABANK: {
+    label: "China Bank",
+    accountName: "Ralph Ryan Sarsuelo",
+    accountNumber: "", // ← add your China Bank account number
+    note: "Bank transfer via China Bank app, InstaPay, or over the counter.",
+  },
+} as const;
+
+export type PaymentMethodKey = keyof typeof paymentMethods;
+
 export const navLinks = [
   { label: "Home", href: "/#home" },
   { label: "About", href: "/#about" },

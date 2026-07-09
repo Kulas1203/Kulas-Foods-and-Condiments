@@ -50,6 +50,7 @@ export const checkoutSchema = z.object({
   email: z.string().email(),
   items: z.array(orderItemSchema).min(1),
   couponCode: z.string().optional(),
+  paymentMethod: z.enum(["GCASH", "MAYA", "CHINABANK"]).default("GCASH"),
   address: z
     .object({
       line1: z.string().min(3),

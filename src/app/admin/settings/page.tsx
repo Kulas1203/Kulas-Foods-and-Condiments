@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { Mail, Phone, MapPin, Facebook, Check, X } from "lucide-react";
 import { AdminTopbar } from "@/components/admin/topbar";
-import { siteConfig } from "@/data/site";
+import { siteConfig, paymentMethods } from "@/data/site";
 
 function StatusRow({ label, ok }: { label: string; ok: boolean }) {
   return (
@@ -31,7 +31,11 @@ export default function AdminSettingsPage() {
       ok: Boolean(process.env.GEMINI_API_KEY),
     },
     { label: "AI Chef — Anthropic", ok: Boolean(process.env.ANTHROPIC_API_KEY) },
-    { label: "Payments — Stripe", ok: Boolean(process.env.STRIPE_SECRET_KEY) },
+    ...Object.values(paymentMethods).map((m) => ({
+      label: `Payments — ${m.label}`,
+      ok: Boolean(m.accountNumber),
+    })),
+    { label: "Payments — Stripe (cards)", ok: Boolean(process.env.STRIPE_SECRET_KEY) },
     {
       label: "Media — Cloudinary",
       ok: Boolean(process.env.CLOUDINARY_URL || process.env.CLOUDINARY_API_KEY),

@@ -5,15 +5,15 @@ import { priceOrder, createOrder } from "@/services/orders";
 import { stripe, isStripeEnabled } from "@/lib/stripe";
 import { sendOrderConfirmation } from "@/services/email";
 import { formatPrice } from "@/lib/utils";
-import { siteConfig } from "@/data/site";
+import { siteConfig, paymentMethods } from "@/data/site";
 
 export async function POST(req: NextRequest) {
   try {
     const input = checkoutSchema.parse(await req.json());
     const priced = await priceOrder(input);
-    const order = await createOrder(priced);
+    const order = await createOrder(priced, input.paymentMethod);
 
-    // Stripe Checkout when configured; otherwise return a confirmation payload.
+    // Stripe Checkout when configured; otherwise manual PH payment channels.
     if (isStripeEnabled && stripe) {
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
@@ -34,15 +34,25 @@ export async function POST(req: NextRequest) {
       return ok({ orderNumber: order.orderNumber, checkoutUrl: session.url });
     }
 
+    const method = paymentMethods[input.paymentMethod];
+
     void sendOrderConfirmation(
       order.email,
       order.orderNumber,
       formatPrice(Number(order.total)),
+      input.paymentMethod,
     );
 
     return ok({
       orderNumber: order.orderNumber,
       total: Number(order.total),
+      paymentMethod: input.paymentMethod,
+      payment: {
+        label: method.label,
+        accountName: method.accountName,
+        accountNumber: method.accountNumber,
+        note: method.note,
+      },
       checkoutUrl: null,
     });
   } catch (error) {

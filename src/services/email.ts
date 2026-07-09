@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 import type { ContactInput } from "@/lib/validations";
-import { siteConfig } from "@/data/site";
+import { siteConfig, paymentMethods, type PaymentMethodKey } from "@/data/site";
 
 /**
  * Thin email service around Resend. Every function is a safe no-op when
@@ -31,8 +31,27 @@ export async function sendOrderConfirmation(
   to: string,
   orderNumber: string,
   total: string,
+  paymentMethod?: PaymentMethodKey,
 ) {
   if (!resend) return;
+
+  const method = paymentMethod ? paymentMethods[paymentMethod] : null;
+  const paymentBlock = method
+    ? `
+        <div style="margin:16px 0;padding:16px;border:1px solid #eee;border-radius:12px;background:#fafafa">
+          <h2 style="margin:0 0 8px;font-size:16px">How to pay — ${method.label}</h2>
+          <p style="margin:4px 0">Account name: <strong>${method.accountName}</strong></p>
+          ${
+            method.accountNumber
+              ? `<p style="margin:4px 0">Account number: <strong>${method.accountNumber}</strong></p>`
+              : `<p style="margin:4px 0">We'll reply to this email with our ${method.label} account details.</p>`
+          }
+          <p style="margin:4px 0">Amount: <strong>${total}</strong></p>
+          <p style="margin:4px 0">Reference: <strong>${orderNumber}</strong></p>
+          <p style="margin:8px 0 0;color:#555;font-size:13px">${method.note} Please include your order number as the payment reference, then reply to this email (or message our Facebook page) with a screenshot of your payment so we can ship your order right away.</p>
+        </div>`
+    : "";
+
   await resend.emails
     .send({
       from,
@@ -43,6 +62,7 @@ export async function sendOrderConfirmation(
           <h1 style="color:#C1121F">Salamat for your order!</h1>
           <p>Order <strong>${orderNumber}</strong> is confirmed.</p>
           <p>Total: <strong>${total}</strong></p>
+          ${paymentBlock}
           <p>We'll email you again when it ships. Crafted with fire, made with flavor.</p>
         </div>`,
     })

@@ -80,12 +80,16 @@ export async function priceOrder(input: CheckoutInput): Promise<PricedOrder> {
 }
 
 /** Persists a priced order and decrements inventory, then broadcasts live events. */
-export async function createOrder(priced: PricedOrder) {
+export async function createOrder(priced: PricedOrder, paymentMethod?: string) {
   const order = await prisma.$transaction(async (tx) => {
     const order = await tx.order.create({
       data: {
         orderNumber: priced.orderNumber,
         email: priced.email,
+        // Manual payment channels (GCash/Maya/China Bank) are recorded in the
+        // otherwise-unused stripeSession column as "manual:<METHOD>" so no
+        // schema migration is required.
+        stripeSession: paymentMethod ? `manual:${paymentMethod}` : undefined,
         subtotal: priced.subtotal,
         discount: priced.discount,
         shipping: priced.shipping,

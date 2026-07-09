@@ -5,10 +5,25 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Lock, ArrowLeft } from "lucide-react";
+import { Lock, ArrowLeft, Wallet, Smartphone, Landmark, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/features/cart/cart-store";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, cn } from "@/lib/utils";
+import { paymentMethods, type PaymentMethodKey } from "@/data/site";
+
+const PAYMENT_OPTIONS: {
+  key: PaymentMethodKey;
+  icon: typeof Wallet;
+  color: string;
+}[] = [
+  { key: "GCASH", icon: Smartphone, color: "from-sky-500/20 to-sky-500/5" },
+  { key: "MAYA", icon: Wallet, color: "from-emerald-500/20 to-emerald-500/5" },
+  {
+    key: "CHINABANK",
+    icon: Landmark,
+    color: "from-brand-primary/20 to-brand-primary/5",
+  },
+];
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -20,6 +35,7 @@ export default function CheckoutPage() {
     province: "",
     postalCode: "",
   });
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodKey>("GCASH");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -40,6 +56,7 @@ export default function CheckoutPage() {
             productId: i.productId,
             quantity: i.quantity,
           })),
+          paymentMethod,
           address: { ...address, country: "Philippines" },
         }),
       });
@@ -51,7 +68,9 @@ export default function CheckoutPage() {
         return;
       }
       clear();
-      router.push(`/checkout/success?order=${json.data.orderNumber}`);
+      router.push(
+        `/checkout/success?order=${json.data.orderNumber}&pay=${paymentMethod}&total=${json.data.total}`,
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setLoading(false);
@@ -124,14 +143,61 @@ export default function CheckoutPage() {
             />
           </Section>
 
+          <Section title="Payment Method">
+            <div className="grid gap-3 sm:grid-cols-3">
+              {PAYMENT_OPTIONS.map(({ key, icon: Icon, color }) => {
+                const m = paymentMethods[key];
+                const active = paymentMethod === key;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setPaymentMethod(key)}
+                    aria-pressed={active}
+                    className={cn(
+                      "relative rounded-2xl border bg-gradient-to-b p-4 text-left transition-all",
+                      color,
+                      active
+                        ? "border-brand-secondary/60 ring-2 ring-brand-secondary/40"
+                        : "border-white/10 hover:border-white/25",
+                    )}
+                  >
+                    {active && (
+                      <span className="absolute right-3 top-3 grid h-5 w-5 place-items-center rounded-full bg-brand-gradient">
+                        <Check className="h-3 w-3 text-white" />
+                      </span>
+                    )}
+                    <Icon className="h-6 w-6 text-white/90" />
+                    <p className="mt-2 font-heading text-sm font-bold">
+                      {m.label}
+                    </p>
+                    <p className="mt-0.5 text-[11px] leading-snug text-muted">
+                      {m.note}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-xs text-muted">
+              Place your order, then pay via{" "}
+              <span className="font-semibold text-white">
+                {paymentMethods[paymentMethod].label}
+              </span>{" "}
+              using your order number as reference — full instructions appear on
+              the next screen and in your email.
+            </p>
+          </Section>
+
           {error && <p className="text-sm text-brand-secondary">{error}</p>}
 
           <Button type="submit" size="lg" className="w-full" disabled={loading}>
             <Lock className="h-4 w-4" />
-            {loading ? "Processing..." : `Pay ${formatPrice(total + shipping)}`}
+            {loading
+              ? "Processing..."
+              : `Place order · ${formatPrice(total + shipping)}`}
           </Button>
           <p className="text-center text-xs text-muted">
-            Secure checkout · Stripe-ready. No card is charged in demo mode.
+            Pay via GCash, Maya, or China Bank after placing your order.
           </p>
         </form>
 
