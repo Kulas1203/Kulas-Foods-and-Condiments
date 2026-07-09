@@ -37,16 +37,14 @@ export const paymentMethods: Record<"GCASH" | "MAYA" | "CHINABANK", PaymentMetho
     accountName: "Ralph Ryan Sarsuelo",
     accountNumber: "0995 109 4135",
     note: "Send via the GCash app — Express Send or scan the QR.",
-    // Export from GCash app: Profile → My QR → Save, then place the image
-    // at public/payments/gcash-qr.jpg and set the path here.
-    qrImage: "",
+    qrImage: "/payments/gcash-qr.jpg",
   },
   MAYA: {
     label: "Maya",
     accountName: "Ralph Ryan Sarsuelo",
     accountNumber: "0995 109 4135",
     note: "Send via the Maya app or scan the QR.",
-    qrImage: "",
+    qrImage: "/payments/maya-qr.jpg",
   },
   CHINABANK: {
     label: "China Bank",
