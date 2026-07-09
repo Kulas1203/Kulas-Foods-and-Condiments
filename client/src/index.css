@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background-color: #0d0b09;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: #c21807;
+  color: #f5efe0;
+}
+
+/* thin ember scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0b09;
+}
+::-webkit-scrollbar-thumb {
+  background: #3a251a;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8e1004;
+}
+
+@layer components {
+  /* frosted glassmorphism card */
+  .glass {
+    @apply border border-white/10 bg-white/[0.05] backdrop-blur-xl shadow-glass;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-full bg-chili px-7 py-3 font-sans text-sm font-bold uppercase tracking-wider text-cream shadow-ember transition-colors hover:bg-chili-bright;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-full border border-cream/25 px-7 py-3 font-sans text-sm font-bold uppercase tracking-wider text-cream/90 transition-colors hover:border-amber-glow hover:text-amber-glow;
+  }
+
+  .input-dark {
+    @apply w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-cream placeholder:text-cream/30 outline-none transition-colors focus:border-amber-glow/60;
+  }
+
+  .section-eyebrow {
+    @apply mb-3 inline-block text-xs font-bold uppercase tracking-[0.3em] text-amber-glow;
+  }
+}
+
+/* grain overlay for the rustic feel */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
