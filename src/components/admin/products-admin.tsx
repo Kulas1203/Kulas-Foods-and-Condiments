@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Pencil, Loader2, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, X, ImageUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatPrice, slugify } from "@/lib/utils";
 
@@ -22,13 +22,37 @@ export type AdminProduct = {
 const STATUSES = ["ACTIVE", "DRAFT", "COMING_SOON", "ARCHIVED"] as const;
 
 export function ProductsAdmin({ products }: { products: AdminProduct[] }) {
+  const router = useRouter();
   const [editing, setEditing] = useState<AdminProduct | null>(null);
   const [creating, setCreating] = useState(false);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [error, setError] = useState("");
   const demo = products.some((p) => p.demo);
+
+  async function remove(p: AdminProduct) {
+    if (
+      !window.confirm(
+        `Delete "${p.name}" permanently? This cannot be undone.`,
+      )
+    )
+      return;
+    setBusy(p.id);
+    setError("");
+    try {
+      const res = await fetch(`/api/products/${p.slug}`, { method: "DELETE" });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Delete failed");
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setBusy(null);
+    }
+  }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-muted">
           {products.length} products
           {demo && " · demo data (connect a database to manage products)"}
@@ -37,6 +61,8 @@ export function ProductsAdmin({ products }: { products: AdminProduct[] }) {
           <Plus className="h-4 w-4" /> New Product
         </Button>
       </div>
+
+      {error && <p className="text-sm text-brand-secondary">{error}</p>}
 
       <div className="overflow-hidden rounded-4xl border border-white/10 bg-surface/50 backdrop-blur-xl">
         <table className="w-full text-left text-sm">
@@ -82,14 +108,28 @@ export function ProductsAdmin({ products }: { products: AdminProduct[] }) {
                   </span>
                 </td>
                 <td className="p-4 text-right">
-                  <button
-                    onClick={() => setEditing(p)}
-                    disabled={demo}
-                    className="inline-grid h-8 w-8 place-items-center rounded-full hover:bg-white/10 disabled:opacity-40"
-                    aria-label={`Edit ${p.name}`}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </button>
+                  {busy === p.id ? (
+                    <Loader2 className="ml-auto h-4 w-4 animate-spin text-muted" />
+                  ) : (
+                    <div className="flex justify-end gap-1">
+                      <button
+                        onClick={() => setEditing(p)}
+                        disabled={demo}
+                        className="inline-grid h-8 w-8 place-items-center rounded-full hover:bg-white/10 disabled:opacity-40"
+                        aria-label={`Edit ${p.name}`}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => remove(p)}
+                        disabled={demo}
+                        className="inline-grid h-8 w-8 place-items-center rounded-full text-brand-secondary hover:bg-brand-primary/15 disabled:opacity-40"
+                        aria-label={`Delete ${p.name}`}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
@@ -121,6 +161,7 @@ function ProductFormModal({
   product: AdminProduct | null;
 }) {
   const router = useRouter();
+  const fileRef = useRef<HTMLInputElement>(null);
   const isEdit = Boolean(product);
   const [name, setName] = useState(product?.name ?? "");
   const [price, setPrice] = useState(product ? String(product.price) : "");
@@ -128,6 +169,8 @@ function ProductFormModal({
   const [heatLevel, setHeatLevel] = useState(4);
   const [netWeight, setNetWeight] = useState("");
   const [description, setDescription] = useState("");
+  const [photo, setPhoto] = useState(""); // uploaded image URL (pending save)
+  const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -138,6 +181,30 @@ function ProductFormModal({
     setName(product.name);
     setPrice(String(product.price));
     setStatus(product.status);
+    setPhoto("");
+  }
+
+  const previewSrc = photo || product?.heroImage || "";
+
+  async function uploadPhoto(file: File) {
+    setUploading(true);
+    setError("");
+    try {
+      const form = new FormData();
+      form.append("files", file);
+      form.append("folder", "products");
+      form.append("alt", name || file.name);
+      const res = await fetch("/api/media", { method: "POST", body: form });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Upload failed");
+      const url = json.data?.[0]?.url;
+      if (!url) throw new Error("Upload failed");
+      setPhoto(url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function submit(e: React.FormEvent) {
@@ -153,7 +220,12 @@ function ProductFormModal({
         ? await fetch(`/api/products/${product!.slug}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, price: priceNum, status }),
+            body: JSON.stringify({
+              name,
+              price: priceNum,
+              status,
+              ...(photo ? { heroImage: photo } : {}),
+            }),
           })
         : await fetch("/api/products", {
             method: "POST",
@@ -169,7 +241,7 @@ function ProductFormModal({
                 description.length >= 10
                   ? description
                   : `${name} — handcrafted by Kulas Foods and Condiments.`,
-              heroImage: "/products/kulas-chili-garlic-sauce.jpg",
+              heroImage: photo || "/products/kulas-chili-garlic-sauce.jpg",
             }),
           });
       const json = await res.json();
@@ -224,6 +296,60 @@ function ProductFormModal({
             </h3>
 
             <form onSubmit={submit} className="mt-6 grid gap-4">
+              {/* Product photo */}
+              <Field label="Product photo">
+                <div className="flex items-center gap-4">
+                  <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/40">
+                    {previewSrc ? (
+                      <Image
+                        src={previewSrc}
+                        alt="Product photo"
+                        fill
+                        sizes="80px"
+                        className="object-contain p-1"
+                      />
+                    ) : (
+                      <ImageUp className="absolute inset-0 m-auto h-6 w-6 text-muted" />
+                    )}
+                  </div>
+                  <div>
+                    <input
+                      ref={fileRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/avif"
+                      className="hidden"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) uploadPhoto(f);
+                        e.target.value = "";
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      disabled={uploading}
+                      onClick={() => fileRef.current?.click()}
+                    >
+                      {uploading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />{" "}
+                          Uploading…
+                        </>
+                      ) : (
+                        <>
+                          <ImageUp className="h-4 w-4" /> Upload photo
+                        </>
+                      )}
+                    </Button>
+                    <p className="mt-1.5 text-[11px] text-muted">
+                      JPG/PNG/WebP, max 8MB.
+                      {photo && " ✓ New photo ready — save to apply."}
+                    </p>
+                  </div>
+                </div>
+              </Field>
+
               <Field label="Name">
                 <input
                   required
@@ -298,7 +424,7 @@ function ProductFormModal({
 
               {error && <p className="text-sm text-brand-secondary">{error}</p>}
 
-              <Button type="submit" disabled={loading}>
+              <Button type="submit" disabled={loading || uploading}>
                 {loading ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" /> Saving…

@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { productSchema } from "@/lib/validations";
-import { ok, notFound, unauthorized, handleError } from "@/lib/api";
+import { ok, notFound, unauthorized, badRequest, handleError } from "@/lib/api";
 import { requireRole } from "@/lib/auth";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -39,7 +39,22 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
   try {
     if (!(await requireRole(["ADMIN", "SUPER_ADMIN"]))) return unauthorized();
     const { slug } = await params;
-    await prisma.product.delete({ where: { slug } });
+    try {
+      await prisma.product.delete({ where: { slug } });
+    } catch (err) {
+      // P2003: order items reference this product — history must be kept.
+      if (
+        err &&
+        typeof err === "object" &&
+        "code" in err &&
+        (err as { code: string }).code === "P2003"
+      ) {
+        return badRequest(
+          "This product has existing orders and can't be deleted. Set its status to ARCHIVED instead.",
+        );
+      }
+      throw err;
+    }
     return ok({ deleted: true });
   } catch (error) {
     return handleError(error);
