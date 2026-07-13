@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { Plus, Tag, Loader2, X, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

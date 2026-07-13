@@ -8,7 +8,7 @@ import {
   useSpring,
   useMotionValueEvent,
   AnimatePresence,
-} from "framer-motion";
+} from "motion/react";
 import { Menu, X, ShoppingBag, Flame } from "lucide-react";
 import { navLinks, siteConfig } from "@/data/site";
 import { useCart } from "@/features/cart/cart-store";

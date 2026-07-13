@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Flame, Facebook, Send, Check } from "lucide-react";
 import { siteConfig, footerLinks } from "@/data/site";
 import { Button } from "@/components/ui/button";

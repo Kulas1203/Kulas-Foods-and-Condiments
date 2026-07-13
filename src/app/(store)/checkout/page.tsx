@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Lock, ArrowLeft, Wallet, Smartphone, Landmark, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/features/cart/cart-store";

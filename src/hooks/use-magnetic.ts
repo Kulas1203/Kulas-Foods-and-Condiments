@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { useMotionValue, useSpring, type MotionValue } from "framer-motion";
+import { useMotionValue, useSpring, type MotionValue } from "motion/react";
 
 /**
  * Magnetic hover effect — element gently follows the cursor within its bounds.

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { Radio, ShoppingBag, PackageMinus, Zap } from "lucide-react";
 import { useEventSource, type ConnectionState } from "@/hooks/use-event-source";
 import { formatPrice, cn } from "@/lib/utils";

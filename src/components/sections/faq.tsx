@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { Plus } from "lucide-react";
 import { SectionHeading } from "./section-heading";
 import { Reveal } from "@/components/motion/reveal";

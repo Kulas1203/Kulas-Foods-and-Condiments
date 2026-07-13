@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { Search, Clock, Users, ChefHat, X, Flame } from "lucide-react";
 import { SectionHeading } from "./section-heading";
 import { RecipeAssistant } from "./recipe-assistant";

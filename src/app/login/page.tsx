@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Flame, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { Plus, Pencil, Trash2, Loader2, X, ImageUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatPrice, slugify } from "@/lib/utils";
