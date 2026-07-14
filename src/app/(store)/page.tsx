@@ -1,6 +1,7 @@
 import { Hero } from "@/components/sections/hero";
 import { About } from "@/components/sections/about";
 import { FeaturedProduct } from "@/components/sections/featured-product";
+import { Craft } from "@/components/sections/craft";
 import { WhyChooseUs } from "@/components/sections/why-choose-us";
 import { ProductShowcase } from "@/components/sections/product-showcase";
 import { Reviews } from "@/components/sections/reviews";
@@ -16,6 +17,7 @@ export default function HomePage() {
       <About />
       <WaveDivider className="opacity-70" />
       <FeaturedProduct />
+      <Craft />
       <WhyChooseUs />
       <ProductShowcase />
       <WaveDivider flip className="opacity-70" />
