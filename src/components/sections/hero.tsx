@@ -45,7 +45,6 @@ function JarFallback() {
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
-  const product = getFeaturedProduct();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -61,26 +60,24 @@ export function Hero() {
       ref={ref}
       className="relative flex min-h-screen items-center overflow-hidden pt-24"
     >
-      {/* Cinematic video background (OpenHero-style). Falls back to the
-          product photo poster until a /hero-video.mp4 is added. */}
+      {/* Cinematic video background (OpenHero-style). Only renders once a
+          /hero-video.mp4 exists; until then the branded gradient below shows. */}
       <motion.div style={{ scale: videoScale }} className="absolute inset-0 -z-20">
         <video
           autoPlay
           muted
           loop
           playsInline
-          poster={product.heroImage}
           className="h-full w-full object-cover"
         >
           <source src="/hero-video.mp4" type="video/mp4" />
         </video>
       </motion.div>
 
-      {/* Legibility + brand tint overlays */}
+      {/* Legibility + brand tint overlays (also the fallback backdrop) */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-background/70" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-background/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/45" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
         <div className="absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-brand-radial blur-3xl" />
         <div className="absolute bottom-0 right-0 h-[400px] w-[400px] rounded-full bg-ember-glow blur-3xl" />
         <FloatingParticles count={24} />

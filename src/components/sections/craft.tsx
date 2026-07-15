@@ -109,19 +109,32 @@ export function Craft() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="organic-shell float-core scroll-grow relative aspect-square w-full max-w-[560px]"
+              className="float-core scroll-grow relative aspect-square w-full max-w-[520px]"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/30 via-background to-background" />
-              <Image
-                src={product.heroImage}
-                alt={product.name}
-                fill
-                sizes="(max-width: 1024px) 90vw, 45vw"
-                className="object-contain p-10 saturate-[1.1]"
-                priority={false}
-              />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_35%,rgba(15,15,15,0.7)_100%)]" />
-              <div className="pulse-ember absolute bottom-10 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/40 px-4 py-2 backdrop-blur-md">
+              {/* Ember glow behind the shape */}
+              <div className="absolute inset-4 rounded-full bg-brand-radial opacity-70 blur-3xl" />
+
+              {/* Organic blob mask holding the product photo */}
+              <div
+                className="relative h-full w-full overflow-hidden border border-white/10 shadow-glow"
+                style={{
+                  borderRadius: "46% 54% 56% 44% / 44% 42% 58% 56%",
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/25 via-surface to-background" />
+                <Image
+                  src={product.heroImage}
+                  alt={product.name}
+                  fill
+                  sizes="(max-width: 1024px) 90vw, 45vw"
+                  className="object-cover"
+                  priority={false}
+                />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_55%,rgba(15,15,15,0.55)_100%)]" />
+              </div>
+
+              {/* Product label pill — sibling so it's never clipped by the blob */}
+              <div className="pulse-ember absolute -bottom-3 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/10 bg-black/70 px-4 py-2 backdrop-blur-md">
                 <span className="flex items-center gap-2 text-xs font-semibold text-white/90">
                   <Flame className="h-3.5 w-3.5 text-brand-secondary" />
                   {product.name}
