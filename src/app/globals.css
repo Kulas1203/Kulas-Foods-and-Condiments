@@ -154,12 +154,21 @@
       0 0 80px rgba(255, 90, 54, 0.08);
   }
 
-  .float-core {
-    animation: drift 9s ease-in-out infinite;
-  }
-
   .pulse-ember {
     animation: pulseEmber 4s ease-in-out infinite;
+  }
+
+  /* Heat-shimmer sway for hero display type */
+  .heat-wave {
+    display: inline-block;
+    transform-origin: left center;
+    animation: heatWave 6.5s ease-in-out infinite;
+  }
+
+  /* Chili flakes / sauce drips flying across the hero video */
+  .chili-flight {
+    filter: drop-shadow(0 0 8px rgba(244, 180, 0, 0.14));
+    animation: flight 10s linear infinite;
   }
 }
 
@@ -179,17 +188,7 @@
   }
 }
 
-/* Liquid-glass / organic effect keyframes */
-@keyframes drift {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
-}
-
+/* Liquid-glass / hero effect keyframes */
 @keyframes pulseEmber {
   0%,
   100% {
@@ -202,22 +201,33 @@
   }
 }
 
-/* Scroll-linked grow for the product shell (progressive enhancement) */
-@supports (animation-timeline: view()) {
-  .scroll-grow {
-    animation: shellGrow linear both;
-    animation-timeline: view();
-    animation-range: entry 10% cover 65%;
+@keyframes heatWave {
+  0%,
+  100% {
+    transform: translateX(0) skewX(0deg);
   }
-  @keyframes shellGrow {
-    from {
-      transform: scale(0.92);
-      opacity: 0.65;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
+  25% {
+    transform: translateX(1px) skewX(-1deg);
+  }
+  50% {
+    transform: translateX(-1px) skewX(1deg);
+  }
+  75% {
+    transform: translateX(0.5px) skewX(-0.6deg);
+  }
+}
+
+@keyframes flight {
+  0% {
+    transform: translate3d(var(--x0), var(--y0), 0) rotate(var(--r0));
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--x1), var(--y1), 0) rotate(var(--r1));
+    opacity: 0;
   }
 }
 

@@ -6,16 +6,51 @@ import { Flame } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { getFeaturedProduct } from "@/data/products";
 
-const metrics = [
-  { label: "Heat Level", value: "4/5" },
-  { label: "Small Batches", value: "100%" },
+/** The making of Kulas — assembly-ledger strips. */
+const steps = [
+  {
+    label: "01 · Fresh Harvest",
+    title: "Labuyo picked at peak heat.",
+    text: "We start with fresh Filipino labuyo chili — small, fierce, and full of flavor, chosen at its brightest red.",
+    metric: "01",
+    note: "Heat 4/5",
+    indent: "",
+  },
+  {
+    label: "02 · Toasted Garlic",
+    title: "Golden, fragrant, never burnt.",
+    text: "Garlic is toasted low and slow until it turns deep gold — the smoky backbone of every jar.",
+    metric: "02",
+    note: "Low & slow",
+    indent: "lg:ml-[6%] lg:w-[88%]",
+  },
+  {
+    label: "03 · Slow-Cook",
+    title: "Small batches, stirred by hand.",
+    text: "Chili, garlic, and premium oil simmer together in small batches so the heat builds deep and finishes clean.",
+    metric: "03",
+    note: "Small batch",
+    indent: "lg:ml-[11%] lg:w-[82%]",
+  },
+  {
+    label: "04 · Jar & Seal",
+    title: "Sealed hot, delivered fresh.",
+    text: "Every jar is filled and sealed the same day it's cooked — no preservatives, nothing artificial.",
+    metric: "04",
+    note: "220g net",
+    indent: "lg:ml-[4%] lg:w-[92%]",
+  },
 ];
 
-const bars = [
-  { label: "Fresh Labuyo Chili", value: "96%", width: "w-[96%]" },
-  { label: "Toasted Garlic", value: "91%", width: "w-[91%]" },
-  { label: "Handcrafted Quality", value: "100%", width: "w-full" },
+/** What's inside — flavor-stack layers. */
+const layers = [
+  { tag: "Heat", name: "Fresh labuyo chili", right: "Fire", width: "86%", indent: "" },
+  { tag: "Aroma", name: "Toasted garlic", right: "Golden", width: "74%", indent: "lg:ml-[6%]" },
+  { tag: "Body", name: "Premium oil & sea salt", right: "Silk", width: "66%", indent: "lg:ml-[12%]" },
+  { tag: "Finish", name: "Cane vinegar", right: "Bright", width: "58%", indent: "lg:ml-[4%]" },
 ];
+
+const chips = ["Labuyo", "Toasted garlic", "Slow-cooked", "Zero preservatives"];
 
 export function Craft() {
   const product = getFeaturedProduct();
@@ -24,125 +59,144 @@ export function Craft() {
     <section id="craft" className="relative overflow-hidden py-24 sm:py-32">
       {/* Ambient ember glows */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-24 left-[8%] h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,rgba(255,90,54,0.16),transparent_70%)] blur-3xl" />
-        <div className="absolute bottom-0 right-[4%] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(244,180,0,0.1),transparent_70%)] blur-3xl" />
+        <div className="absolute -top-24 left-[8%] h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,rgba(255,90,54,0.14),transparent_70%)] blur-3xl" />
+        <div className="absolute bottom-0 right-[4%] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(244,180,0,0.09),transparent_70%)] blur-3xl" />
       </div>
 
       <div className="container-px relative">
-        <section className="grid items-center gap-16 lg:grid-cols-[0.52fr_0.48fr]">
-          {/* Copy + panels */}
-          <div className="relative z-10 max-w-2xl">
-            <Reveal>
-              <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.03] px-5 py-3 font-heading text-[11px] uppercase tracking-[0.3em] text-white/60">
-                <span className="pulse-ember h-2 w-2 rounded-full bg-brand-secondary shadow-[0_0_15px_rgba(255,90,54,0.9)]" />
-                Small-Batch Craft
+        {/* ── Assembly ledger ── */}
+        <div className="relative border-t border-white/10 pt-10">
+          <Reveal>
+            <div className="mb-10 flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-end">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/50">
+                  The Making of Kulas
+                </p>
+                <h2 className="mt-5 max-w-3xl font-heading text-4xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl">
+                  Cooked like a ritual,{" "}
+                  <span className="text-gradient">jarred like a promise.</span>
+                </h2>
               </div>
-            </Reveal>
-
-            <Reveal delay={0.05}>
-              <h2 className="mt-8 font-heading text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl xl:text-7xl">
-                Crafted like a<br />
-                <span className="text-gradient">living fire.</span>
-              </h2>
-            </Reveal>
-
-            <Reveal delay={0.1}>
-              <p className="mt-8 max-w-xl text-lg leading-8 text-white/55">
-                Every jar of Kulas is slow-cooked in small batches — fresh
-                labuyo chili and toasted garlic coaxed into a deep, smoky heat
-                that finishes clean. No shortcuts, no fillers. Just fire, made
-                with flavor.
+              <p className="max-w-md leading-8 text-muted">
+                Every batch follows the heat, not the clock. Four stages, one
+                small kitchen in Butuan City — assembled on scroll.
               </p>
-            </Reveal>
+            </div>
+          </Reveal>
 
-            <Reveal delay={0.15}>
-              <div className="mt-12 flex flex-wrap gap-5">
-                {metrics.map((metric) => (
-                  <div
-                    key={metric.label}
-                    className="liquid-panel rounded-[2rem] px-6 py-5"
+          <div className="space-y-5">
+            {steps.map((step, i) => (
+              <Reveal key={step.metric} delay={i * 0.05}>
+                <article
+                  className={`relative overflow-hidden border-b border-t border-white/10 py-6 ${step.indent}`}
+                >
+                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,90,54,0.08),transparent_35%,rgba(244,180,0,0.06)_75%,transparent_100%)] opacity-60" />
+                  <div className="relative grid items-end gap-4 lg:grid-cols-[0.9fr_0.4fr_0.3fr]">
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/55">
+                        {step.label}
+                      </p>
+                      <h3 className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight sm:text-4xl">
+                        {step.title}
+                      </h3>
+                      <p className="mt-3 max-w-[48ch] leading-7 text-muted">
+                        {step.text}
+                      </p>
+                    </div>
+                    <div className="font-heading text-6xl font-extrabold leading-none tracking-tighter text-white/10 sm:text-8xl lg:justify-self-end">
+                      {step.metric}
+                    </div>
+                    <div className="self-end text-[10px] font-semibold uppercase tracking-[0.28em] text-white/50 lg:text-right">
+                      {step.note}
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Flavor stack ── */}
+        <div className="mt-24 grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+          <Reveal>
+            <div className="liquid-panel rounded-4xl p-7 sm:p-12">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/50">
+                Flavor Stack
+              </p>
+              <h2 className="mt-5 font-heading text-4xl font-extrabold leading-[0.95] tracking-tight sm:text-5xl">
+                Four layers of fire in{" "}
+                <span className="text-gradient">every spoonful.</span>
+              </h2>
+              <p className="mt-5 max-w-xl leading-8 text-muted">
+                Labuyo heat up front, toasted-garlic smoke underneath, a silky
+                body of premium oil, and a bright cane-vinegar finish that keeps
+                you coming back.
+              </p>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                {chips.map((chip) => (
+                  <span
+                    key={chip}
+                    className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/70"
                   >
-                    <div className="font-heading text-[10px] uppercase tracking-[0.28em] text-white/45">
-                      {metric.label}
-                    </div>
-                    <div className="mt-3 font-heading text-3xl font-bold">
-                      {metric.value}
-                    </div>
-                  </div>
+                    {chip}
+                  </span>
                 ))}
+              </div>
 
-                <div className="liquid-panel flex-1 rounded-[2rem] px-6 py-5">
-                  <div className="font-heading text-[10px] uppercase tracking-[0.28em] text-white/45">
-                    In Every Spoonful
-                  </div>
-                  <div className="mt-4 space-y-3">
-                    {bars.map((bar) => (
-                      <div key={bar.label}>
-                        <div className="mb-1.5 flex items-center justify-between text-xs text-white/55">
-                          <span>{bar.label}</span>
-                          <span>{bar.value}</span>
-                        </div>
-                        <div className="h-2 overflow-hidden rounded-full bg-white/10">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            whileInView={{ width: bar.value }}
-                            viewport={{ once: true }}
-                            transition={{
-                              duration: 1.1,
-                              ease: [0.16, 1, 0.3, 1],
-                            }}
-                            className={`h-full rounded-full bg-brand-gradient ${bar.width}`}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+              {/* The jar itself */}
+              <div className="relative mt-8 overflow-hidden rounded-3xl border border-white/10">
+                <div className="relative aspect-[16/9]">
+                  <Image
+                    src={product.heroImage}
+                    alt={product.name}
+                    fill
+                    sizes="(max-width: 1024px) 90vw, 45vw"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                </div>
+                <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full border border-white/10 bg-black/60 px-3.5 py-1.5 backdrop-blur-md">
+                  <Flame className="h-3.5 w-3.5 text-brand-secondary" />
+                  <span className="text-xs font-semibold text-white/90">
+                    {product.name}
+                  </span>
                 </div>
               </div>
-            </Reveal>
+            </div>
+          </Reveal>
+
+          <div className="flex flex-col gap-4 pt-2">
+            {layers.map((layer, i) => (
+              <Reveal key={layer.tag} delay={i * 0.08}>
+                <div className={`liquid-panel rounded-3xl p-5 sm:p-6 ${layer.indent}`}>
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/55">
+                        {layer.tag}
+                      </p>
+                      <p className="mt-2 font-heading text-xl font-bold leading-tight sm:text-2xl">
+                        {layer.name}
+                      </p>
+                    </div>
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/50">
+                      {layer.right}
+                    </span>
+                  </div>
+                  <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
+                    <motion.span
+                      initial={{ width: 0 }}
+                      whileInView={{ width: layer.width }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                      className="block h-full rounded-full bg-brand-gradient"
+                    />
+                  </div>
+                </div>
+              </Reveal>
+            ))}
           </div>
-
-          {/* Organic product shell */}
-          <div className="relative flex items-center justify-center lg:justify-end">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="float-core scroll-grow relative aspect-square w-full max-w-[520px]"
-            >
-              {/* Ember glow behind the shape */}
-              <div className="absolute inset-4 rounded-full bg-brand-radial opacity-70 blur-3xl" />
-
-              {/* Organic blob mask holding the product photo */}
-              <div
-                className="relative h-full w-full overflow-hidden border border-white/10 shadow-glow"
-                style={{
-                  borderRadius: "46% 54% 56% 44% / 44% 42% 58% 56%",
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/25 via-surface to-background" />
-                <Image
-                  src={product.heroImage}
-                  alt={product.name}
-                  fill
-                  sizes="(max-width: 1024px) 90vw, 45vw"
-                  className="object-cover"
-                  priority={false}
-                />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_55%,rgba(15,15,15,0.55)_100%)]" />
-              </div>
-
-              {/* Product label pill — sibling so it's never clipped by the blob */}
-              <div className="pulse-ember absolute -bottom-3 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/10 bg-black/70 px-4 py-2 backdrop-blur-md">
-                <span className="flex items-center gap-2 text-xs font-semibold text-white/90">
-                  <Flame className="h-3.5 w-3.5 text-brand-secondary" />
-                  {product.name}
-                </span>
-              </div>
-            </motion.div>
-          </div>
-        </section>
+        </div>
       </div>
     </section>
   );
