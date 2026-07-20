@@ -19,16 +19,136 @@ const SPECS = [
 
 /** Chili flakes & sauce drips that fly across the video like embers. */
 const FLIGHTS: { kind: "flake" | "drip"; vars: Record<string, string> }[] = [
-  { kind: "flake", vars: { "--x0": "60vw", "--y0": "14vh", "--x1": "8vw", "--y1": "32vh", "--r0": "-12deg", "--r1": "16deg", left: "58%", top: "12%" } },
-  { kind: "flake", vars: { "--x0": "62vw", "--y0": "22vh", "--x1": "12vw", "--y1": "44vh", "--r0": "14deg", "--r1": "-12deg", left: "64%", top: "18%" } },
-  { kind: "flake", vars: { "--x0": "66vw", "--y0": "36vh", "--x1": "18vw", "--y1": "48vh", "--r0": "-8deg", "--r1": "8deg", left: "70%", top: "28%" } },
-  { kind: "flake", vars: { "--x0": "58vw", "--y0": "48vh", "--x1": "14vw", "--y1": "58vh", "--r0": "10deg", "--r1": "-10deg", left: "54%", top: "38%" } },
-  { kind: "flake", vars: { "--x0": "72vw", "--y0": "24vh", "--x1": "24vw", "--y1": "38vh", "--r0": "-14deg", "--r1": "14deg", left: "76%", top: "20%" } },
-  { kind: "drip", vars: { "--x0": "68vw", "--y0": "18vh", "--x1": "18vw", "--y1": "26vh", "--r0": "-24deg", "--r1": "20deg", left: "67%", top: "14%" } },
-  { kind: "drip", vars: { "--x0": "74vw", "--y0": "30vh", "--x1": "22vw", "--y1": "46vh", "--r0": "18deg", "--r1": "-22deg", left: "74%", top: "24%" } },
-  { kind: "drip", vars: { "--x0": "70vw", "--y0": "50vh", "--x1": "16vw", "--y1": "56vh", "--r0": "-18deg", "--r1": "10deg", left: "72%", top: "42%" } },
-  { kind: "flake", vars: { "--x0": "76vw", "--y0": "18vh", "--x1": "28vw", "--y1": "20vh", "--r0": "7deg", "--r1": "-7deg", left: "81%", top: "14%" } },
-  { kind: "flake", vars: { "--x0": "78vw", "--y0": "44vh", "--x1": "30vw", "--y1": "52vh", "--r0": "-10deg", "--r1": "12deg", left: "84%", top: "36%" } },
+  {
+    kind: "flake",
+    vars: {
+      "--x0": "60vw",
+      "--y0": "14vh",
+      "--x1": "8vw",
+      "--y1": "32vh",
+      "--r0": "-12deg",
+      "--r1": "16deg",
+      left: "58%",
+      top: "12%",
+    },
+  },
+  {
+    kind: "flake",
+    vars: {
+      "--x0": "62vw",
+      "--y0": "22vh",
+      "--x1": "12vw",
+      "--y1": "44vh",
+      "--r0": "14deg",
+      "--r1": "-12deg",
+      left: "64%",
+      top: "18%",
+    },
+  },
+  {
+    kind: "flake",
+    vars: {
+      "--x0": "66vw",
+      "--y0": "36vh",
+      "--x1": "18vw",
+      "--y1": "48vh",
+      "--r0": "-8deg",
+      "--r1": "8deg",
+      left: "70%",
+      top: "28%",
+    },
+  },
+  {
+    kind: "flake",
+    vars: {
+      "--x0": "58vw",
+      "--y0": "48vh",
+      "--x1": "14vw",
+      "--y1": "58vh",
+      "--r0": "10deg",
+      "--r1": "-10deg",
+      left: "54%",
+      top: "38%",
+    },
+  },
+  {
+    kind: "flake",
+    vars: {
+      "--x0": "72vw",
+      "--y0": "24vh",
+      "--x1": "24vw",
+      "--y1": "38vh",
+      "--r0": "-14deg",
+      "--r1": "14deg",
+      left: "76%",
+      top: "20%",
+    },
+  },
+  {
+    kind: "drip",
+    vars: {
+      "--x0": "68vw",
+      "--y0": "18vh",
+      "--x1": "18vw",
+      "--y1": "26vh",
+      "--r0": "-24deg",
+      "--r1": "20deg",
+      left: "67%",
+      top: "14%",
+    },
+  },
+  {
+    kind: "drip",
+    vars: {
+      "--x0": "74vw",
+      "--y0": "30vh",
+      "--x1": "22vw",
+      "--y1": "46vh",
+      "--r0": "18deg",
+      "--r1": "-22deg",
+      left: "74%",
+      top: "24%",
+    },
+  },
+  {
+    kind: "drip",
+    vars: {
+      "--x0": "70vw",
+      "--y0": "50vh",
+      "--x1": "16vw",
+      "--y1": "56vh",
+      "--r0": "-18deg",
+      "--r1": "10deg",
+      left: "72%",
+      top: "42%",
+    },
+  },
+  {
+    kind: "flake",
+    vars: {
+      "--x0": "76vw",
+      "--y0": "18vh",
+      "--x1": "28vw",
+      "--y1": "20vh",
+      "--r0": "7deg",
+      "--r1": "-7deg",
+      left: "81%",
+      top: "14%",
+    },
+  },
+  {
+    kind: "flake",
+    vars: {
+      "--x0": "78vw",
+      "--y0": "44vh",
+      "--x1": "30vw",
+      "--y1": "52vh",
+      "--r0": "-10deg",
+      "--r1": "12deg",
+      left: "84%",
+      top: "36%",
+    },
+  },
 ];
 
 export function Hero() {
@@ -39,8 +159,9 @@ export function Hero() {
     offset: ["start start", "end start"],
   });
   const textY = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const videoScale = useTransform(scrollYProgress, [0, 1], [1.06, 1.24]);
-  const videoY = useTransform(scrollYProgress, [0, 1], [0, 18]);
+  // Keep the zoom subtle — heavy upscaling makes the 720p portrait clip blurry.
+  const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.05]);
+  const videoY = useTransform(scrollYProgress, [0, 1], [0, 24]);
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
@@ -150,29 +271,17 @@ export function Hero() {
           </div>
         </motion.div>
 
-        {/* Cinematic sauce video */}
-        <div className="relative order-first min-h-[46vh] overflow-hidden lg:order-none lg:min-h-0">
-          <motion.div
-            style={{ scale: videoScale, y: videoY }}
-            className="absolute inset-0"
-          >
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="h-full w-full object-cover object-center [-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_16%,black_72%,transparent_96%)] [mask-image:linear-gradient(to_right,transparent_0%,black_16%,black_72%,transparent_96%)]"
-            >
-              <source src="/hero-video.mp4" type="video/mp4" />
-            </video>
-          </motion.div>
-
-          {/* Warm sauce glow + legibility scrim */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_52%_24%,rgba(255,228,195,0.1),transparent_16%),radial-gradient(circle_at_70%_62%,rgba(244,180,0,0.12),transparent_16%),linear-gradient(180deg,rgba(15,15,15,0.05),rgba(15,15,15,0.45))]" />
-          <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-[42%] bg-gradient-to-r from-background/70 via-background/30 to-transparent lg:block" />
+        {/* Cinematic sauce video — framed portrait film card, near-native
+            resolution so the 720p clip stays sharp */}
+        <div className="relative order-first flex min-h-[58vh] items-center justify-center py-6 lg:order-none lg:min-h-0 lg:py-0">
+          {/* Ember glow behind the card */}
+          <div className="pointer-events-none absolute left-1/2 top-1/2 h-[85%] w-[90%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-radial opacity-70 blur-3xl" />
 
           {/* Flying chili flakes & sauce drips */}
-          <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden" aria-hidden>
+          <div
+            className="pointer-events-none absolute inset-0 z-20 overflow-hidden"
+            aria-hidden
+          >
             {FLIGHTS.map(({ kind, vars }, i) => (
               <span
                 key={i}
@@ -186,39 +295,60 @@ export function Hero() {
             ))}
           </div>
 
-          {/* Floating product card (the real jar photo) */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            className="absolute bottom-6 left-4 z-30 sm:left-8 lg:bottom-14"
-          >
-            <Link
-              href="/products/kulas-chili-garlic-sauce"
-              className="glass-strong flex items-center gap-4 rounded-3xl p-4 pr-6 transition-transform hover:-translate-y-1"
+          <div className="relative z-10">
+            <motion.div
+              style={{ scale: videoScale, y: videoY }}
+              className="aspect-[9/16] h-[46vh] overflow-hidden rounded-[2rem] border border-white/10 bg-black/40 shadow-glow sm:h-[54vh] lg:h-[66vh]"
             >
-              <span className="relative block h-16 w-16 overflow-hidden rounded-2xl bg-black/40">
-                <Image
-                  src={product.heroImage}
-                  alt={product.name}
-                  fill
-                  sizes="64px"
-                  className="object-cover"
-                  priority
-                />
-              </span>
-              <span>
-                <span className="flex items-center gap-1.5 text-sm font-semibold text-white">
-                  <Flame className="h-3.5 w-3.5 text-brand-secondary" />
-                  {product.name}
-                </span>
-                <span className="mt-0.5 block text-xs text-muted">
-                  {formatPrice(product.price)} · {product.netWeight} ·{" "}
-                  <span className="text-brand-accent">Order now →</span>
-                </span>
-              </span>
-            </Link>
-          </motion.div>
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="h-full w-full object-cover object-center"
+              >
+                <source src="/hero-video.mp4" type="video/mp4" />
+              </video>
+              {/* Soft grounding gradient so the card blends into the page */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/55 via-transparent to-transparent" />
+              <div className="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-inset ring-white/10" />
+            </motion.div>
+
+            {/* Floating product card straddling the film card's bottom edge */}
+            <div className="absolute -bottom-7 left-1/2 z-30 w-max -translate-x-1/2">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.7 }}
+              >
+                <Link
+                  href="/products/kulas-chili-garlic-sauce"
+                  className="glass-strong flex items-center gap-4 rounded-3xl p-3.5 pr-6 transition-transform hover:-translate-y-1"
+                >
+                  <span className="relative block h-14 w-14 overflow-hidden rounded-2xl bg-black/40">
+                    <Image
+                      src={product.heroImage}
+                      alt={product.name}
+                      fill
+                      sizes="56px"
+                      className="object-cover"
+                      priority
+                    />
+                  </span>
+                  <span>
+                    <span className="flex items-center gap-1.5 text-sm font-semibold text-white">
+                      <Flame className="h-3.5 w-3.5 text-brand-secondary" />
+                      {product.name}
+                    </span>
+                    <span className="mt-0.5 block text-xs text-muted">
+                      {formatPrice(product.price)} · {product.netWeight} ·{" "}
+                      <span className="text-brand-accent">Order now →</span>
+                    </span>
+                  </span>
+                </Link>
+              </motion.div>
+            </div>
+          </div>
         </div>
       </div>
 
